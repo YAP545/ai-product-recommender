@@ -1,6 +1,8 @@
 # AI Product Recommender
 
-React (Vite) frontend + a Vercel serverless function that calls the OpenAI API.
+**Live Demo:** [https://ai-product-recommender-git-master-yash-patils-projects-fb9ed4af.vercel.app/](https://ai-product-recommender-git-master-yash-patils-projects-fb9ed4af.vercel.app/)
+
+React (Vite) frontend + a Vercel serverless function that calls the Groq API for lightning-fast AI recommendations.
 
 ## How it works
 1. The user types a preference ("a phone under $500").
@@ -14,13 +16,13 @@ The API key stays server-side. With no key set, a keyword/budget fallback keeps 
 ```bash
 npm install
 npm i -g vercel
-vercel dev        # runs frontend + /api together (set OPENAI_API_KEY in .env.local)
+vercel dev        # runs frontend + /api together (set GROQ_API_KEY in .env.local)
 ```
 
 ## Deploy to Vercel
 1. Push this folder to GitHub.
 2. Import the repo at vercel.com/new (framework: Vite is auto-detected).
-3. Add env var `OPENAI_API_KEY` (optional: `OPENAI_MODEL`, default `gpt-4o-mini`).
+3. Add env var `GROQ_API_KEY` (optional: `GROQ_MODEL`, default `openai/gpt-oss-20b`).
 4. Deploy and share the URL.
 
 ## Structure
