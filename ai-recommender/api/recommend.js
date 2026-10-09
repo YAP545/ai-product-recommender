@@ -1,7 +1,7 @@
 // Vercel serverless function. Keeps the API key off the client.
 // POST { query: string, products: Product[] } -> { ids, reason, source }
 
-const MODEL = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+const MODEL = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -39,8 +39,8 @@ export default async function handler(req, res) {
             content:
               "You are a shopping assistant. Recommend products ONLY from the provided catalog. " +
               "Respect hard constraints such as budget and category. Return at most 4 products, best match first. " +
-              'Respond with JSON: {"ids": [number], "reason": "string"}. ' +
-              "reason is one or two plain sentences. If nothing fits, return an empty ids array and explain why.",
+              'You MUST respond in valid JSON. Example format: {"ids": [1, 2], "reason": "These laptops fit your budget."} ' +
+              "The 'reason' should be one or two plain sentences. If nothing fits, return an empty 'ids' array and explain why.",
           },
           {
             role: "user",
