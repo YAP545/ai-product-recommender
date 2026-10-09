@@ -1,7 +1,7 @@
 // Vercel serverless function. Keeps the API key off the client.
 // POST { query: string, products: Product[] } -> { ids, reason, source }
 
-const MODEL = process.env.OPENAI_MODEL || "gpt-4o-mini";
+const MODEL = process.env.GROQ_MODEL || "llama3-8b-8192";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: "Send a preference and the product list." });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
+  const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     return res.status(200).json(fallbackRecommend(query, products));
   }
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       id, name, category, price_usd: price, features,
     }));
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default async function handler(req, res) {
             content:
               "You are a shopping assistant. Recommend products ONLY from the provided catalog. " +
               "Respect hard constraints such as budget and category. Return at most 4 products, best match first. " +
-              'Respond with JSON: {"ids": number[], "reason": string}. ' +
+              'Respond with JSON: {"ids": [number], "reason": "string"}. ' +
               "reason is one or two plain sentences. If nothing fits, return an empty ids array and explain why.",
           },
           {
@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
     if (!response.ok) {
       const detail = await response.text();
-      console.error("OpenAI error:", response.status, detail);
+      console.error("Groq error:", response.status, detail);
       return res.status(502).json({ error: "The AI service returned an error. Try again." });
     }
 
@@ -91,7 +91,7 @@ function fallbackRecommend(query, products) {
   return {
     ids: scored.map((x) => x.p.id),
     reason: scored.length
-      ? "Matched by keywords and budget (demo mode — add OPENAI_API_KEY for AI answers)."
+      ? "Matched by keywords and budget (demo mode — add GROQ_API_KEY for AI answers)."
       : "No products matched. Try a category like phone or headphones, and a budget.",
     source: "fallback",
   };
