@@ -1,7 +1,7 @@
 // Vercel serverless function. Keeps the API key off the client.
 // POST { query: string, products: Product[] } -> { ids, reason, source }
 
-const MODEL = process.env.GROQ_MODEL || "llama3-8b-8192";
+const MODEL = process.env.GROQ_MODEL || "llama-3.1-8b-instant";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
